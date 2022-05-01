@@ -15,24 +15,35 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 def create_pipeline(
-    clf_type
+    clf_type: str,
+    use_scaler: bool
 ):
     print(type(clf_type))
-#     use_scaler: bool, max_iter: int, logreg_C: float, random_state: int
-# ) -> Pipeline:
-#     pipeline_steps = []
-#     if use_scaler:
-#         pipeline_steps.append(("scaler", StandardScaler()))
-#     pipeline_steps.append(
-#         (
-#             "classifier",
-#             LogisticRegression(
-#                 random_state=random_state, max_iter=max_iter, C=logreg_C
-#             ),
-#         )
-#     )
-#     return Pipeline(steps=pipeline_steps)
+    
+    mapping_dict = {
+        'KNeighborsClassifier' : KNeighborsClassifier,
+        'DecisionTreeClassifier' : DecisionTreeClassifier,
+        'RandomForestClassifier' : RandomForestClassifier,
+    }
 
+    print(type(mapping_dict[clf_type]))
+    
+    pipeline_steps = []
+    if use_scaler:
+         pipeline_steps.append(("scaler", StandardScaler()))
+    
+    clf = mapping_dict[clf_type]
+    pipeline_steps.append(
+        (
+            "clf_type",
+            clf(
+                
+            ),
+        )
+    )
+
+    print(Pipeline(steps=pipeline_steps))
+    return Pipeline(steps=pipeline_steps)
 
 
 @click.command()
@@ -63,15 +74,22 @@ def create_pipeline(
 )
 @click.option(
     '--clf-type',
-    type=click.Choice(['KNeighborsClassifier', 'DecisionTreeClassifier']),
+    type=click.Choice(['KNeighborsClassifier', 'DecisionTreeClassifier','RandomForestClassifier']),
     default='DecisionTreeClassifier'
+)
+@click.option(
+    "--use-scaler",
+    default=True,
+    type=bool,
+    show_default=True,
 )
 def train(
     dataset_path: Path,
     random_state,
     test_size,
     save_model_path: Path,
-    clf_type
+    clf_type,
+    use_scaler: bool,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -79,8 +97,5 @@ def train(
         test_size,
     )
 
-    mapping_dict = {
-        'KNeighborsClassifier' : KNeighborsClassifier(),
-        'DecisionTreeClassifier' : DecisionTreeClassifier(),
-    }
-    create_pipeline(mapping_dict[clf_type])
+
+    create_pipeline(clf_type, use_scaler)
