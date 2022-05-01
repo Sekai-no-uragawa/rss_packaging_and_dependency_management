@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "ml-forest"
 version = "0.1.0"
-description = ""
-authors = ["Mikhail Kostin <1bitt2@mail.ru>"]
+description = "Homework for RS School Machine Learning course"
+authors = ["Sekai-no-uragawa <kostinmihail.km@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
