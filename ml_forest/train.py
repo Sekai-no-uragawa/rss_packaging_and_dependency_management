@@ -1,3 +1,4 @@
+from email.policy import default
 from pathlib import Path
 
 import click
@@ -53,6 +54,13 @@ from sklearn.metrics import accuracy_score
     type=bool,
     show_default=True,
 )
+@click.option(
+    '-param',
+    '--model-param',
+    default='',
+    type=click.STRING,
+    help='Parameter set in the form of a dict like: "`n_estimators`: 5, `max_depth`: 10" '
+)
 def train(
     dataset_path: Path,
     random_state,
@@ -60,6 +68,7 @@ def train(
     save_model_path: Path,
     clf_type,
     use_scaler: bool,
+    model_param,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -67,6 +76,8 @@ def train(
         test_size,
     )
 
-    pipeline = create_pipeline(clf_type, use_scaler, random_state)
+    pipeline = create_pipeline(clf_type, use_scaler, random_state, model_param)
     pipeline.fit(features_train, target_train)
     print(f'\naccuracy_score: {accuracy_score(target_val, pipeline.predict(features_val))}')
+    
+    
