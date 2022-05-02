@@ -1,5 +1,5 @@
-from email.policy import default
 from pathlib import Path
+from joblib import dump
 
 import click
 import pandas as pd
@@ -20,7 +20,7 @@ from sklearn.metrics import accuracy_score
 @click.option(
     "-s",
     "--save-model-path",
-    default="profile_report.html",
+    default="data/model.joblib",
     type=click.Path(dir_okay=False, writable=True, path_type=Path),
     show_default=True,
 )
@@ -80,4 +80,4 @@ def train(
     pipeline.fit(features_train, target_train)
     print(f'\naccuracy_score: {accuracy_score(target_val, pipeline.predict(features_val))}')
     
-    
+    dump(pipeline, save_model_path)
