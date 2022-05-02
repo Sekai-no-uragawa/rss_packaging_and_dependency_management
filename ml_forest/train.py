@@ -5,7 +5,6 @@ import click
 import pandas as pd
 
 from .ClassifierSwitcher import ClfSwitcher
-from .data import get_dataset
 from .pipeline import create_pipeline
 from .CV import model_evaluation
 
@@ -28,12 +27,6 @@ from .CV import model_evaluation
     "--random-state",
     default=42,
     type=int,
-    show_default=True,
-)
-@click.option(
-    "--test-size",
-    default=0.2,
-    type=click.FloatRange(0, 1, min_open=True, max_open=True),
     show_default=True,
 )
 @click.option(
@@ -64,7 +57,6 @@ from .CV import model_evaluation
 def train(
     dataset_path: Path,
     random_state,
-    test_size,
     save_model_path: Path,
     clf_type,
     use_scaler: bool,
