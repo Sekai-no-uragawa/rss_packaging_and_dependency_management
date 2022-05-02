@@ -1,4 +1,3 @@
-from calendar import c
 from pathlib import Path
 
 import click
@@ -9,25 +8,22 @@ from .ClassifierSwitcher import ClfSwitcher
 from .data import get_dataset
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
+from sklearn.metrics import accuracy_score
 
 
 def create_pipeline(
     clf_type: str,
-    use_scaler: bool
+    use_scaler: bool,
+    random_state: int,
 ):
-    print(type(clf_type))
-    
     mapping_dict = {
-        'KNeighborsClassifier' : KNeighborsClassifier,
+        'ExtraTreesClassifier' : ExtraTreesClassifier,
         'DecisionTreeClassifier' : DecisionTreeClassifier,
         'RandomForestClassifier' : RandomForestClassifier,
     }
 
-    print(type(mapping_dict[clf_type]))
-    
     pipeline_steps = []
     if use_scaler:
          pipeline_steps.append(("scaler", StandardScaler()))
@@ -36,13 +32,9 @@ def create_pipeline(
     pipeline_steps.append(
         (
             "clf_type",
-            clf(
-                
-            ),
+            clf(random_state=random_state),
         )
     )
-
-    print(Pipeline(steps=pipeline_steps))
     return Pipeline(steps=pipeline_steps)
 
 
@@ -74,8 +66,15 @@ def create_pipeline(
 )
 @click.option(
     '--clf-type',
-    type=click.Choice(['KNeighborsClassifier', 'DecisionTreeClassifier','RandomForestClassifier']),
-    default='DecisionTreeClassifier'
+    type=click.Choice(
+        [
+            'ExtraTreesClassifier',
+            'DecisionTreeClassifier',
+            'RandomForestClassifier',
+        ]
+    ),
+    default='ExtraTreesClassifier',
+    show_default=True,
 )
 @click.option(
     "--use-scaler",
@@ -97,5 +96,6 @@ def train(
         test_size,
     )
 
-
-    create_pipeline(clf_type, use_scaler)
+    pipeline = create_pipeline(clf_type, use_scaler, random_state)
+    pipeline.fit(features_train, target_train)
+    print(accuracy_score(target_val, pipeline.predict(features_val)))
