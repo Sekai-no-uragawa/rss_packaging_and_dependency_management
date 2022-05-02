@@ -7,7 +7,7 @@ import pandas as pd
 from .ClassifierSwitcher import ClfSwitcher
 from .data import get_dataset
 from .pipeline import create_pipeline
-from sklearn.metrics import accuracy_score
+from .CV import model_evaluation
 
 
 @click.command()
@@ -70,14 +70,14 @@ def train(
     use_scaler: bool,
     model_param,
 ) -> None:
-    features_train, features_val, target_train, target_val = get_dataset(
-        dataset_path,
-        random_state,
-        test_size,
-    )
 
     pipeline = create_pipeline(clf_type, use_scaler, random_state, model_param)
-    pipeline.fit(features_train, target_train)
-    print(f'\naccuracy_score: {accuracy_score(target_val, pipeline.predict(features_val))}')
     
+    dataset = pd.read_csv(dataset_path)
+    click.echo(f"\nDataset shape: {dataset.shape}.")
+    features = dataset.drop("Cover_Type", axis=1)
+    target = dataset["Cover_Type"]
+
+    model_evaluation(pipeline, features, target)
+
     dump(pipeline, save_model_path)
