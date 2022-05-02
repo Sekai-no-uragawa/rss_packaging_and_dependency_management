@@ -18,9 +18,9 @@ def get_dataset(
     features_train, features_val, target_train, target_val = train_test_split(
         features, target, test_size=test_split_ratio, random_state=random_state
     )
-    click.echo(
-        f"\nfeatures_train shape: {features_train.shape}.\n\
-features_val shape: {features_val.shape}.\n\
-target_train shape: {target_train.shape}.\n\
-target_val shape: {target_val.shape}.\n")
+#     click.echo(
+#         f"\nfeatures_train shape: {features_train.shape}.\n\
+# features_val shape: {features_val.shape}.\n\
+# target_train shape: {target_train.shape}.\n\
+# target_val shape: {target_val.shape}.\n")
     return features_train, features_val, target_train, target_val

@@ -1,41 +1,12 @@
 from pathlib import Path
 
 import click
-from click import Context as ctx
 import pandas as pd
 
 from .ClassifierSwitcher import ClfSwitcher
 from .data import get_dataset
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
+from .pipeline import create_pipeline
 from sklearn.metrics import accuracy_score
-
-
-def create_pipeline(
-    clf_type: str,
-    use_scaler: bool,
-    random_state: int,
-):
-    mapping_dict = {
-        'ExtraTreesClassifier' : ExtraTreesClassifier,
-        'DecisionTreeClassifier' : DecisionTreeClassifier,
-        'RandomForestClassifier' : RandomForestClassifier,
-    }
-
-    pipeline_steps = []
-    if use_scaler:
-         pipeline_steps.append(("scaler", StandardScaler()))
-    
-    clf = mapping_dict[clf_type]
-    pipeline_steps.append(
-        (
-            "clf_type",
-            clf(random_state=random_state),
-        )
-    )
-    return Pipeline(steps=pipeline_steps)
 
 
 @click.command()
@@ -98,4 +69,4 @@ def train(
 
     pipeline = create_pipeline(clf_type, use_scaler, random_state)
     pipeline.fit(features_train, target_train)
-    print(accuracy_score(target_val, pipeline.predict(features_val)))
+    print(f'\naccuracy_score: {accuracy_score(target_val, pipeline.predict(features_val))}')
