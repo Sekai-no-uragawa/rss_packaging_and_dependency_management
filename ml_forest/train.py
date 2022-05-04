@@ -1,14 +1,11 @@
-from distutils.archive_util import make_zipfile
 from pathlib import Path
 from joblib import dump
 
 import click
-import pandas as pd
 import mlflow
 import mlflow.sklearn
 import ast
 
-from .ClassifierSwitcher import ClfSwitcher
 from .pipeline import create_pipeline
 from .CV import model_evaluation
 from .data import get_dataset
