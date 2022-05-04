@@ -27,7 +27,7 @@ def create_pipeline(
     clf = mapping_dict[clf_type]
     pipeline_steps.append(
         (
-            "clf_type",
+            f"{clf_type}",
             clf(random_state=random_state, **params),
         )
     )

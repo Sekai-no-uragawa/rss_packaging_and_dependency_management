@@ -1,8 +1,12 @@
+from distutils.archive_util import make_zipfile
 from pathlib import Path
 from joblib import dump
 
 import click
 import pandas as pd
+import mlflow
+import mlflow.sklearn
+import ast
 
 from .ClassifierSwitcher import ClfSwitcher
 from .pipeline import create_pipeline
@@ -63,13 +67,32 @@ def train(
     model_param,
 ) -> None:
 
-    pipeline = create_pipeline(clf_type, use_scaler, random_state, model_param)
-    
-    dataset = pd.read_csv(dataset_path)
-    click.echo(f"\nDataset shape: {dataset.shape}.")
-    features = dataset.drop("Cover_Type", axis=1)
-    target = dataset["Cover_Type"]
 
-    model_evaluation(pipeline, features, target)
+    with mlflow.start_run() as run:
+            
+        pipeline = create_pipeline(clf_type, use_scaler, random_state, model_param)
+        
+        dataset = pd.read_csv(dataset_path)
+        click.echo(f"\nDataset shape: {dataset.shape}.")
+        features = dataset.drop("Cover_Type", axis=1)
+        target = dataset["Cover_Type"]
 
-    dump(pipeline, save_model_path)
+        pipeline = pipeline.fit(features, target)
+
+        acc, f1, roc_auc = model_evaluation(pipeline, features, target)
+
+        mlflow.log_param("use_scaler", use_scaler)
+        for key, param in ast.literal_eval('{' + model_param + '}').items():   
+            mlflow.log_param(key, param)
+        
+        mlflow.log_metric("accuracy", acc)
+        mlflow.log_metric("f1_macro", f1)
+        mlflow.log_metric("roc_auc_ovr", roc_auc)
+
+        mlflow.sklearn.log_model(
+            sk_model=pipeline,
+            artifact_path='models',
+        )
+
+        dump(pipeline, save_model_path)
+        print(f'Model saved to {save_model_path}')
