@@ -11,6 +11,7 @@ import ast
 from .ClassifierSwitcher import ClfSwitcher
 from .pipeline import create_pipeline
 from .CV import model_evaluation
+from .data import get_dataset
 
 
 @click.command()
@@ -52,6 +53,13 @@ from .CV import model_evaluation
     show_default=True,
 )
 @click.option(
+    "-f",
+    "--use-feat-engineering",
+    default=False,
+    type=bool,
+    show_default=True,
+)
+@click.option(
     '-param',
     '--model-param',
     default='',
@@ -64,24 +72,22 @@ def train(
     save_model_path: Path,
     clf_type,
     use_scaler: bool,
+    use_feat_engineering: bool,
     model_param,
 ) -> None:
 
 
-    with mlflow.start_run() as run:
-            
-        pipeline = create_pipeline(clf_type, use_scaler, random_state, model_param)
+    with mlflow.start_run(run_name=f'{clf_type}') as run:
         
-        dataset = pd.read_csv(dataset_path)
-        click.echo(f"\nDataset shape: {dataset.shape}.")
-        features = dataset.drop("Cover_Type", axis=1)
-        target = dataset["Cover_Type"]
-
+        features, target = get_dataset(dataset_path, use_feat_engineering)  
+        
+        pipeline = create_pipeline(clf_type, use_scaler, random_state, model_param)
         pipeline = pipeline.fit(features, target)
 
         acc, f1, roc_auc = model_evaluation(pipeline, features, target)
 
         mlflow.log_param("use_scaler", use_scaler)
+        mlflow.log_param("use-feat-engineering", use_feat_engineering)
         for key, param in ast.literal_eval('{' + model_param + '}').items():   
             mlflow.log_param(key, param)
         

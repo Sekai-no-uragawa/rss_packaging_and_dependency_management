@@ -3,20 +3,34 @@ from typing import Tuple
 
 import click
 import pandas as pd
-from sklearn.model_selection import train_test_split
 
 
-def get_dataset(
-    csv_path: Path,
-    random_state: int,
-    test_split_ratio: float,
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+def get_dataset(csv_path: Path, features_eng: bool) -> Tuple[pd.DataFrame, pd.Series]:
+    
     dataset = pd.read_csv(csv_path)
     click.echo(f"\nDataset shape: {dataset.shape}.")
     features = dataset.drop("Cover_Type", axis=1)
     target = dataset["Cover_Type"]
-    features_train, features_val, target_train, target_val = train_test_split(
-        features, target, test_size=test_split_ratio, random_state=random_state
-    )
-
-    return features_train, features_val, target_train, target_val
+    
+    if features_eng:
+        features['Euclidian_Distance_To_Hydrology'] = (
+            features['Horizontal_Distance_To_Hydrology']**2 + 
+            features['Vertical_Distance_To_Hydrology']**2
+        )**0.5
+        features['Mean_Elevation_Vertical_Distance_Hydrology'] = (
+            features['Elevation'] + features['Vertical_Distance_To_Hydrology']
+        )/2
+        features['Mean_Distance_Hydrology_Firepoints'] = (
+            features['Horizontal_Distance_To_Hydrology'] + 
+            features['Horizontal_Distance_To_Fire_Points']
+        )/2
+        features['Mean_Distance_Hydrology_Roadways'] = (
+            features['Horizontal_Distance_To_Hydrology'] + 
+            features['Horizontal_Distance_To_Roadways']
+        )/2
+        features['Mean_Distance_Firepoints_Roadways'] = (
+            features['Horizontal_Distance_To_Fire_Points'] + 
+            features['Horizontal_Distance_To_Roadways']
+        )/2
+    
+    return features, target
