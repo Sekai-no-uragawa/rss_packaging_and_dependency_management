@@ -97,5 +97,9 @@ def train(
             artifact_path='models',
         )
 
-        dump(pipeline, save_model_path)
+        if save_model_path.parents[0].exists():
+            dump(pipeline, save_model_path)
+        else:
+            save_model_path.parents[0].mkdir(parents=True, exist_ok=True)
+            dump(pipeline, save_model_path)
         print(f'Model saved to {save_model_path}')
