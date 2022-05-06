@@ -38,6 +38,10 @@ poetry run train --help
 ```sh
 poetry run mlflow ui
 ```
+
+You can see the results of your experiments in the MLFlow UI. For example, my experimental results obtained during the execution of the work:
+![MLFlow results](https://user-images.githubusercontent.com/96841762/167152464-bdd90042-7aa1-4cb1-80af-033f96d9edfe.png)
+
 7. Run EDA with the following command:
 ```sh
 poetry run eda -d <path to csv with data> -s <path to save pandas-profiling file>
