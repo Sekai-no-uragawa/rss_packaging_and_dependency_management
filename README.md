@@ -20,7 +20,7 @@ poetry run train -d <path to csv with data> -s <path to save trained model>
 Additional options:
 
 | Command | Type | Description |
-| --- | --- |
+| --- | --- | --- |
 |-d, --dataset-path | FILE | [default: data/train.csv] |
 | -s, --save-model-path | FILE | [default: data/model.joblib] |
 | --random-state | INTEGER | [default: 42] |
