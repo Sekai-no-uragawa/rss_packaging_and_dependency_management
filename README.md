@@ -21,19 +21,50 @@ Additional options:
 
 | Command | Type | Description |
 | --- | --- | --- |
-|-d, --dataset-path | FILE | [default: data/train.csv] |
+| -d, --dataset-path | FILE | [default: data/train.csv] |
 | -s, --save-model-path | FILE | [default: data/model.joblib] |
 | --random-state | INTEGER | [default: 42] |
-| --clf-type | TEXT | [ExtraTreesClassifier|DecisionTreeClassifier|RandomForestClassifier] [default: ExtraTreesClassifier] |
+| --clf-type | TEXT | [ExtraTreesClassifier; DecisionTreeClassifier; RandomForestClassifier] [default: ExtraTreesClassifier] |
 | --use-scaler | BOOLEAN | [default: True] |
 | -f, --use-feat-engineering | BOOLEAN | [default: False] |
-| -param, --model-param | TEXT |  Parameter set in the form of a dict like: "`n_estimators`: 5, `max_depth`: 10" |
-| --help | | Show this message and exit. |
+| -param, --model-param | TEXT |  Model parameters set in the form of a dict like: `-param "'n_estimators': 5, 'max_depth': 10"` |
+| --help | | Show full list of options in CLI. |
+
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
 ```sh
 poetry run train --help
 ```
 6. Run MLflow UI to see the information about experiments you conducted:
+```sh
+poetry run mlflow ui
+```
+7. Run EDA with the following command:
+```sh
+poetry run eda -d <path to csv with data> -s <path to save pandas-profiling file>
+```
+You can check options in the CLI. To get a full list of them, use help:
+```sh
+poetry run eda --help
+```
+8. Run hyperparameter tuning with the following command:
+```sh
+poetry run tuning -d <path to csv with data> -s <path to save trained model>
+```
+Additional options:
+
+| Command | Type | Description |
+| --- | --- | --- |
+| -d, --dataset-path | FILE | [default: data/train.csv] |
+| -s, --save-model-path | FILE | [default: data/model.joblib] |
+| --random-state | INTEGER | [default: 42] |
+| --clf-type | TEXT | [ExtraTreesClassifier; DecisionTreeClassifier; RandomForestClassifier] [default: ExtraTreesClassifier] |
+| --use-scaler | BOOLEAN | [default: True] |
+| -f, --use-feat-engineering | BOOLEAN | [default: False] |
+| --help | | Show full list of options in CLI. |
+
+You can change default grid search parameters in `ml_forest\grid_param_config.ini`
+
+9. Run MLflow UI to see the information about experiments you conducted:
 ```sh
 poetry run mlflow ui
 ```
