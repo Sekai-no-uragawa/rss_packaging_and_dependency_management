@@ -19,11 +19,16 @@ poetry run train -d <path to csv with data> -s <path to save trained model>
 ```
 Additional options:
 
-| Command | Description |
+| Command | Type | Description |
 | --- | --- |
-| git status | List all new or modified files |
-| git diff | Show file differences that haven't been staged |
-
+|-d, --dataset-path | FILE | [default: data/train.csv] |
+| -s, --save-model-path | FILE | [default: data/model.joblib] |
+| --random-state | INTEGER | [default: 42] |
+| --clf-type | TEXT | [ExtraTreesClassifier|DecisionTreeClassifier|RandomForestClassifier] [default: ExtraTreesClassifier] |
+| --use-scaler | BOOLEAN | [default: True] |
+| -f, --use-feat-engineering | BOOLEAN | [default: False] |
+| -param, --model-param | TEXT |  Parameter set in the form of a dict like: "`n_estimators`: 5, `max_depth`: 10" |
+| --help | | Show this message and exit. |
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
 ```sh
 poetry run train --help
