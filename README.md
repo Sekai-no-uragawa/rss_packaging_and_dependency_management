@@ -24,10 +24,10 @@ Additional options:
 | -d, --dataset-path | FILE | [default: data/train.csv] |
 | -s, --save-model-path | FILE | [default: data/model.joblib] |
 | --random-state | INTEGER | [default: 42] |
-| --clf-type | TEXT | [ExtraTreesClassifier; DecisionTreeClassifier; RandomForestClassifier] [default: ExtraTreesClassifier] |
+| --clf-type | TEXT | [default: ExtraTreesClassifier] |
 | --use-scaler | BOOLEAN | [default: True] |
 | -f, --use-feat-engineering | BOOLEAN | [default: False] |
-| -param, --model-param | TEXT |  Model parameters set in the form of a dict like: `-param "'n_estimators': 5, 'max_depth': 10"` |
+| -param, --model-param | TEXT | Model parameters set in the form of a dict like: `-param "'n_estimators': 5, 'max_depth': 10"` |
 | --help | | Show full list of options in CLI. |
 
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
@@ -57,7 +57,7 @@ Additional options:
 | -d, --dataset-path | FILE | [default: data/train.csv] |
 | -s, --save-model-path | FILE | [default: data/model.joblib] |
 | --random-state | INTEGER | [default: 42] |
-| --clf-type | TEXT | [ExtraTreesClassifier; DecisionTreeClassifier; RandomForestClassifier] [default: ExtraTreesClassifier] |
+| --clf-type | TEXT | [default: ExtraTreesClassifier] |
 | --use-scaler | BOOLEAN | [default: True] |
 | -f, --use-feat-engineering | BOOLEAN | [default: False] |
 | --help | | Show full list of options in CLI. |
