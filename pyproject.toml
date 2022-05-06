@@ -22,4 +22,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 train = "ml_forest.train:train"
 eda = "ml_forest.eda:eda"
-tuning = "ml_forest.hiperparam_tuning:tuning"
+tuning = "ml_forest.hyperparam_tuning:tuning"
