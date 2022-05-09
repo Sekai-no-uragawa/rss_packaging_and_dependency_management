@@ -97,13 +97,10 @@ def tuning(
             result = search.fit(X_train, np.ravel(y_train))
             
             best_model = result.best_estimator_
-            
             yhat = best_model.predict(X_test)
            
             acc = accuracy_score(y_test, yhat)
-            
             f1 = f1_score(y_test, yhat, average='macro')
-            
             roc = roc_auc_score(y_test, best_model.predict_proba(X_test), average='macro', multi_class='ovr')
 
             outer_results.setdefault(acc, (result.best_params_, (acc, f1, roc)))
@@ -116,15 +113,16 @@ def tuning(
         for key in list(dict_param.keys()):
             new = key.replace(f'{clf_type}__', '')
             dict_param[new] = dict_param.pop(key)
-        
-        mlflow.log_param("use_scaler", use_scaler)
-        mlflow.log_param("use-feat-engineering", use_feat_engineering)
         for key, param in dict_param.items():   
             mlflow.log_param(key, param)
+
+        mlflow.log_param("use_scaler", use_scaler)
+        mlflow.log_param("use-feat-engineering", use_feat_engineering)
         
-        mlflow.log_metric("accuracy", best_params[1][0])
-        mlflow.log_metric("f1_macro", best_params[1][1])
-        mlflow.log_metric("roc_auc_ovr", best_params[1][2])
+        result_score = np.array([result[1] for result in outer_results.values()])
+        mlflow.log_metric("accuracy", result_score[0])
+        mlflow.log_metric("f1_macro", result_score[1])
+        mlflow.log_metric("roc_auc_ovr", result_score[2])
 
         pipeline = create_pipeline(clf_type, use_scaler, random_state, dict_param)
         pipeline = pipeline.fit(features, target)
