@@ -36,7 +36,7 @@ def test_train_isolated(
     pred_data_path = 'tests/test_data_to_predict.csv'
     test_data = pd.read_csv(test_data_path)
     pred_data = pd.read_csv(pred_data_path)
-    with runner.isolated_filesystem('C:/test'):
+    with runner.isolated_filesystem():
         test_data.to_csv('test_data.csv')
         pred_data.to_csv('pred_data.csv')
         result = runner.invoke(
