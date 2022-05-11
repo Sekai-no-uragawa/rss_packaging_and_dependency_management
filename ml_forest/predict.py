@@ -12,17 +12,17 @@ from .data import feature_engineering
 @click.option(
     "-id",
     "--run_id",
-    default="2eeea5e737674f758800969e6122015a",  
+    default="2eeea5e737674f758800969e6122015a",
     type=str,
     show_default=True,
 )
 @click.option(
     "-l",
     "--logged_model",
-    default="",  
+    default="",
     type=str,
     show_default=True,
-    help='The location, in URI format, of the MLflow model. if pass it is compiled based on "id"'
+    help='The location, in URI format, of the MLflow model. if pass it is compiled based on "id"',
 )
 @click.option(
     "-p",
@@ -45,18 +45,18 @@ def predict(
     save_subm_path: Path,
 ) -> None:
     run_data_dict = mlflow.get_run(run_id).data.to_dictionary()
-    use_feat_engineering = run_data_dict['params']['use-feat-engineering']
+    use_feat_engineering = run_data_dict["params"]["use-feat-engineering"]
     test = pd.read_csv(predict_data_path)
     if use_feat_engineering:
         test = feature_engineering(test)
 
     if not logged_model:
-        logged_model = 'runs:/' + run_id + '/models'
+        logged_model = "runs:/" + run_id + "/models"
     loaded_model = mlflow.pyfunc.load_model(logged_model)
     pred = loaded_model.predict(test)
 
     submission = pd.DataFrame()
-    submission['Id'] = test.Id
-    submission['Cover_Type'] = pred
+    submission["Id"] = test.Id
+    submission["Cover_Type"] = pred
     submission.to_csv(save_subm_path, index=False)
-    print(f'Model saved to {save_subm_path}')
+    print(f"Model saved to {save_subm_path}")

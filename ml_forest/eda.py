@@ -23,19 +23,16 @@ import pandas_profiling
     type=click.Path(dir_okay=False, writable=True, path_type=Path),
     show_default=True,
 )
-def eda(
-    csv_path: Path,
-    save_eda_path: Path
-    ):
+def eda(csv_path: Path, save_eda_path: Path):
     data = pd.read_csv(csv_path)
     click.echo("Data loaded.")
-    click.echo('Start creating a report...')
+    click.echo("Start creating a report...")
     report = data.profile_report(
         missing_diagrams={"Count": False},
         sort=None,
         html={"style": {"full_width": True}},
         progress_bar=False,
-        )
-    click.echo('Report created, saving...')
+    )
+    click.echo("Report created, saving...")
     report.to_file(save_eda_path)
-    click.echo(f'Report saved to {save_eda_path}')
+    click.echo(f"Report saved to {save_eda_path}")

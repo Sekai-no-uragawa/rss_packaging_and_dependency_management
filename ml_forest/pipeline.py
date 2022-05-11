@@ -13,20 +13,20 @@ def create_pipeline(
     model_param: str,
 ):
     mapping_dict = {
-        'ExtraTreesClassifier' : ExtraTreesClassifier,
-        'DecisionTreeClassifier' : DecisionTreeClassifier,
-        'RandomForestClassifier' : RandomForestClassifier,
+        "ExtraTreesClassifier": ExtraTreesClassifier,
+        "DecisionTreeClassifier": DecisionTreeClassifier,
+        "RandomForestClassifier": RandomForestClassifier,
     }
 
     if type(model_param) != dict:
-        params = ast.literal_eval('{' + model_param + '}')
+        params = ast.literal_eval("{" + model_param + "}")
     else:
         params = model_param
 
     pipeline_steps = []
     if use_scaler:
-         pipeline_steps.append(("scaler", StandardScaler()))
-    
+        pipeline_steps.append(("scaler", StandardScaler()))
+
     clf = mapping_dict[clf_type]
     pipeline_steps.append(
         (
