@@ -85,3 +85,11 @@ Now you can use developer instruments, e.g. pytest:
 ```
 poetry run pytest
 ```
+Format your code with [black](https://github.com/psf/black) by using poetry:
+```
+poetry run black ml_forest tests
+```
+Format your code with flake8 by using poetry:
+```
+poetry run flake8 ml_forest tests
+```
