@@ -72,3 +72,16 @@ You can change default grid search parameters in `ml_forest\grid_param_config.in
 ```sh
 poetry run mlflow ui
 ```
+
+## Development
+
+The code in this repository can be tested before being commited to the repository.
+
+Install all requirements (including dev requirements) to poetry environment:
+```
+poetry install
+```
+Now you can use developer instruments, e.g. pytest:
+```
+poetry run pytest
+```
